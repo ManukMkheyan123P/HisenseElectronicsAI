@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hisense AI | Smart Product Search</title>
+
+<style>
+:root {
+    --bg: #080e19;
+    --surface: #111d2c;
+    --surface2: #19283a;
+    --border: #26394d;
+    --accent: #11c9b0;
+    --text: #f2f7fa;
+    --muted: #94a8b9;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            #10313a 0%,
+            var(--bg) 55%
+        );
+    color: var(--text);
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+header {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8%;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: var(--accent);
+}
+
+.header-tag {
+    color: var(--accent);
+    font-size: 12px;
+    padding: 9px 14px;
+    border: 1px solid #176a63;
+    border-radius: 20px;
+}
+
+main {
+    width: min(100% - 32px, 950px);
+    margin: 90px auto 50px;
+}
+
+.hero {
+    text-align: center;
+}
+
+.hero-badge {
+    display: inline-block;
+    color: var(--accent);
+    background: #10352f;
+    border: 1px solid #17675b;
+    padding: 9px 17px;
+    border-radius: 25px;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+h1 {
+    font-size: clamp(35px, 6vw, 60px);
+    line-height: 1.15;
+    margin: 25px 0 18px;
+    letter-spacing: -1.5px;
+}
+
+h1 span {
+    color: var(--accent);
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.search-container {
+    display: flex;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px;
+    border-radius: 17px;
+    margin-top: 45px;
+    box-shadow: 0 15px 45px #00000040;
+}
+
+.search-container:focus-within {
+    border-color: var(--accent);
+}
+
+.search-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 15px;
+    font-size: 17px;
+    color: white;
+}
+
+.search-input::placeholder {
+    color: #73899a;
+}
+
+.search-button {
+    background: var(--accent);
+    color: #051d1a;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-button:hover {
+    background: #4ce6d0;
+    transform: translateY(-1px);
+}
+
+.search-button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.examples {
+    margin-top: 18px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.examples span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.example-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: #c7d6df;
+    padding: 9px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.example-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.results-section {
+    margin-top: 65px;
+}
+
+.results-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background: linear-gradient(
+        145deg,
+        #172638,
+        #101b2a
+    );
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 25px;
+    transition: 0.25s;
+    animation: fadeUp 0.35s ease both;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    border-color: #159f91;
+    box-shadow: 0 15px 35px #00000030;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+
+.category {
+    color: var(--accent);
+    background: #0d3935;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.match-label {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.product-model {
+    font-size: 27px;
+    font-weight: 750;
+    margin: 25px 0 12px;
+    overflow-wrap: anywhere;
+}
+
+.product-description {
+    color: #b4c4d1;
+    line-height: 1.7;
+    min-height: 65px;
+    font-size: 14px;
+}
+
+.score-header {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.score-value {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.progress-track {
+    height: 7px;
+    border-radius: 10px;
+    background: #2a3a4d;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(
+        90deg,
+        #0d9488,
+        #39e7ce
+    );
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    border: 1px dashed var(--border);
+    border-radius: 15px;
+    color: var(--muted);
+}
+
+footer {
+    text-align: center;
+    color: #61798c;
+    padding: 50px 20px 30px;
+    font-size: 12px;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media(max-width: 650px) {
+    header {
+        padding: 0 20px;
+    }
+
+    main {
+        margin-top: 60px;
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+
+    .search-button {
+        width: 100%;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">HISENSE <span>AI</span></div>
+    <div class="header-tag">ML POWERED SEARCH</div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-badge">
+            INTELLIGENT PRODUCT DISCOVERY
+        </div>
+
+        <h1>
+            Find Your Perfect<br>
+            <span>Hisense Product.</span>
+        </h1>
+
+        <p class="subtitle">
+            Explore Hisense products with intelligent
+            TF-IDF powered search technology.
+            <br>
+            Enter a model number or describe what you need.
+        </p>
+
+        <form class="search-container" id="searchForm">
+            <input
+                class="search-input"
+                type="text"
+                id="query"
+                placeholder="Search model e.g. 55U7KQ"
+                maxlength="200"
+                autocomplete="off"
+                required
+            >
+
+            <button class="search-button" id="searchBtn">
+                Search Products
+            </button>
+        </form>
+
+        <div class="examples">
+            <span>Try searching:</span>
+            <button class="example-btn" data-query="55U7KQ">
+                55U7KQ
+            </button>
+            <button class="example-btn" data-query="Mini LED">
+                Mini LED
+            </button>
+            <button class="example-btn" data-query="4K Smart TV">
+                4K Smart TV
+            </button>
+        </div>
+    </section>
+
+    <section class="results-section" id="resultsSection" hidden>
+        <h2 class="results-title" id="resultsTitle">
+            Search Results
+        </h2>
+
+        <div class="results-grid" id="resultsGrid"></div>
+    </section>
+</main>
+
+<footer>
+    Hisense AI Product Catalog • Machine Learning Prototype
+    <br>
+    Independent demonstration project
+</footer>
+
+<script>
+const form = document.getElementById("searchForm");
+const input = document.getElementById("query");
+const button = document.getElementById("searchBtn");
+const section = document.getElementById("resultsSection");
+const grid = document.getElementById("resultsGrid");
+const title = document.getElementById("resultsTitle");
+
+async function searchProducts(query) {
+    query = query.trim();
+
+    if (!query) return;
+
+    input.value = query;
+    button.disabled = true;
+    button.textContent = "Searching...";
+
+    section.hidden = false;
+    grid.replaceChildren();
+    title.textContent = "Searching products...";
+
+    try {
+        const response = await fetch("/search", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ query })
+        });
+
+        if (!response.ok) {
+            throw new Error("Server error");
+        }
+
+        const data = await response.json();
+
+        title.textContent =
+            `Search Results (${data.count})`;
+
+        if (!data.results.length) {
+            const empty = document.createElement("div");
+            empty.className = "empty-state";
+            empty.textContent =
+                "No matching products found. Try another model.";
+            grid.appendChild(empty);
+            return;
+        }
+
+        data.results.forEach(product => {
+            const card = document.createElement("article");
+            card.className = "product-card";
+
+            const top = document.createElement("div");
+            top.className = "card-top";
+
+            const category = document.createElement("span");
+            category.className = "category";
+            category.textContent = product.category;
+
+            const match = document.createElement("span");
+            match.className = "match-label";
+            match.textContent = "TF-IDF Match";
+
+            top.append(category, match);
+
+            const model = document.createElement("h3");
+            model.className = "product-model";
+            model.textContent = "Hisense " + product.model;
+
+            const description = document.createElement("p");
+            description.className = "product-description";
+            description.textContent = product.description;
+
+            const scoreHeader = document.createElement("div");
+            scoreHeader.className = "score-header";
+
+            const scoreLabel = document.createElement("span");
+            scoreLabel.textContent = "Similarity Score";
+
+            const scoreValue = document.createElement("span");
+            scoreValue.className = "score-value";
+
+            const score = Math.max(
+                0,
+                Math.min(1, Number(product.similarity) || 0)
+            );
+
+            scoreValue.textContent =
+                (score * 100).toFixed(1) + "%";
+
+            scoreHeader.append(scoreLabel, scoreValue);
+
+            const track = document.createElement("div");
+            track.className = "progress-track";
+
+            const fill = document.createElement("div");
+            fill.className = "progress-fill";
+            fill.style.width = (score * 100) + "%";
+
+            track.appendChild(fill);
+
+            card.append(
+                top,
+                model,
+                description,
+                scoreHeader,
+                track
+            );
+
+            grid.appendChild(card);
+        });
+
+    } catch (error) {
+        title.textContent = "Search Error";
+
+        const message = document.createElement("div");
+        message.className = "empty-state";
+        message.textContent =
+            "Unable to connect to the server. Please try again.";
+
+        grid.appendChild(message);
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "Search Products";
+    }
+}
+
+form.addEventListener("submit", event => {
+    event.preventDefault();
+    searchProducts(input.value);
+});
+
+document.querySelectorAll(".example-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        searchProducts(btn.dataset.query);
+    });
+});
+</script>
+
+</body>
+</html>
